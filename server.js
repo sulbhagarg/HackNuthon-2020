@@ -35,6 +35,20 @@ app.get('/', function(req, res){
     res.sendFile(path.join(__dirname+'/index.html'));
 });
 
+// =============
+// Signin Route
+// =============
+app.get('/signin', function(req, res){
+    res.send("This will be signin in page!");
+});
+
+// =============
+// Signup Route
+// =============
+app.get('/signup', function(req, res){
+    res.send("This will be signup in page!");
+});
+
 // ====================================
 // PORT listener, server is running :)
 // ====================================
