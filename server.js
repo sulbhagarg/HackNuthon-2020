@@ -1,5 +1,8 @@
 // ===============================
 // Classic Node Packages & APIS
+
+const { profile } = require('console');
+
 // ===============================
 global.express = require('express');
 global.app = express();
@@ -14,6 +17,12 @@ global.keys = require('./config/keys');
 global.paytm = require('paytm-pg-node-sdk');
 global.checksum_lib = require('./Paytm/checksum');
 global.config = require('./Paytm/config');
+global.flash = require("connect-flash");
+
+// ===================
+// Exporting Models
+// ===================
+global.User = require('./models/user');
 
 // =======================
 // Environment Variables
@@ -24,6 +33,11 @@ var URL = "mongodb+srv://sulbha:databasePassword@maindatabase.ykfyn.mongodb.net/
 // ===========================
 // Setting up the view engine
 // ===========================
+app.use(require("express-session")({
+    secret: "hack.",
+    resave: false,
+    saveUninitialized: false
+}));
 app.set("view engine","ejs");
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
@@ -32,6 +46,20 @@ app.use( bodyParser.urlencoded({
 }));
 app.use( passport.initialize());
 app.use( passport.session());
+passport.serializeUser(function(user, done){
+    done(null, user);
+});
+passport.deserializeUser(function(obj, done){
+    done(null, obj);
+});
+
+// =============================
+// Setting up the user globally
+// =============================
+app.use(function(req, res, next){
+    res.locals.currentUser = req.user;
+    next();
+});
 
 // ==============================
 // Connection setup to database
@@ -42,11 +70,6 @@ mongoose.connect(URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(
     console.log("mongodb not connected");
     console.log(error);
 });
-
-// ===================
-// Exporting Models
-// ===================
-global.User = require('./models/user');
 
 // =========================
 // Passport session setup.
@@ -69,10 +92,12 @@ passport.use(new googleStrategy({
         proxy: true
     },
     function(request, accessToken, refreshToken, profile, done) {
-        console.log(profile);
+        // console.log(profile);
         User.findOne({userId:profile.id}).then((foundUser)=>{
             if(foundUser) {
                 done(null,foundUser)
+                // console.log(foundUser);
+                // res.render('profile');
             } else {
                 new User({
                     userId:profile.id,
@@ -80,6 +105,8 @@ passport.use(new googleStrategy({
                     picture:profile._json.picture
                 }).save().then((user)=>{
                     done(null,user)
+                    // console.log(user);
+                    // res.render('profile');
                 });
             }
         });
@@ -100,8 +127,13 @@ app.get('/auth/google', passport.authenticate('google', {
     scope:['profile', 'email']
 }));
 
-app.get( '/auth/google/callback', passport.authenticate( 'google'), function(req, res){
-    res.send("Successfully signed up in!");
+app.get( '/auth/google/callback', passport.authenticate( 'google', { 
+    successRedirect: '/auth/google/success',
+    failureRedirect: '/auth/google/failure'
+}));
+
+app.get('/auth/google/success', function(req, res){
+    res.render('profile');
 });
 
 // ==================
