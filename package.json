@@ -10,6 +10,7 @@
   "author": "Fantastic Four",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "^4.5.2",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "mongoose": "^5.10.7",
