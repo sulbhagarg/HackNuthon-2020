@@ -1,8 +1,5 @@
 // ===============================
 // Classic Node Packages & APIS
-
-const { profile } = require('console');
-
 // ===============================
 global.express = require('express');
 global.app = express();
@@ -23,6 +20,7 @@ global.flash = require("connect-flash");
 // Exporting Models
 // ===================
 global.User = require('./models/user');
+global.Requests = require('./models/request');
 
 // =======================
 // Environment Variables
@@ -251,6 +249,58 @@ app.post("/callback", (req, res) => {
             post_req.write(post_data);
             post_req.end();
         });
+    });
+});
+
+// ================
+// Start Helping
+// ================
+app.get('/start_helping', function(req, res){
+
+});
+
+app.post('/start_helping', function(req, res){
+
+});
+
+// ==============
+// Post Request
+// ==============
+app.get('/need_help', function(req, res){
+
+});
+
+app.post('/need_help', function(req, res){
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+    var addressL1 = req.body.addressL1;
+    var addressL2 = req.body.addressL2;
+    var addressL3 = req.body.addressL3;
+    var pincode = req.body.pincode;
+    var contact = req.body.contact;
+    var category = req.body.category;
+    var list = req.body.list;
+    var date = Date.now();
+
+    var newRequest = {
+                        firstName: firstName,
+                        lastName: lastName,
+                        addressL1: addressL1,
+                        addressL2: addressL2,
+                        addressL3: addressL3,
+                        pincode: pincode,
+                        contact: contact,
+                        category: category,
+                        list: list,
+                        date: date
+                    };
+            
+    Requests.create(newRequest, function(err, newlyCreated){
+        if(err) {
+            console.log(err);
+        } else {
+            res.redirect('/');
+        }
     });
 });
 
