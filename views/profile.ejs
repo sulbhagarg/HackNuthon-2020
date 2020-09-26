@@ -65,11 +65,27 @@
     </header>
     <!-- Header part end-->
 
+    <!-- breadcrumb start-->
+    <section class="breadcrumb breadcrumb_bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb_iner">
+                        <div class="breadcrumb_iner_item text-center">
+                            <h2>User Details</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- breadcrumb start-->
+
     <div class="section-top-border">
         <div class="row">
             <div class="col-lg-8 col-md-8">
                 <h3 class="mb-30">Form Element</h3>
-                <form action="/<%= currentUser.userId %>/userDetails" method="POST">
+                <form action="/<%= currentUser.userId %>/updateDetails" method="POST">
                     <div class="mt-10">
                         <input type="text" name="firstName" placeholder="First Name" value="<%= currentUser.firstName %>"
                             onfocus="this.placeholder = ''" onblur="this.placeholder = 'First Name'" required
@@ -81,7 +97,7 @@
                             class="single-input">
                     </div>
                     <div class="mt-10">
-                        <input type="tel" name="contact" placeholder="888 888 8888" pattern="[0-9]{3} [0-9]{3} [0-9]{4}" placeholder="Mobile number"
+                        <input type="tel" name="contact" placeholder="888 888 8888" placeholder="Mobile number"
                             onfocus="this.placeholder = ''" onblur="this.placeholder = 'Phone Number'" required
                             class="single-input" value="<%= currentUser.contact %>">
                     </div>
@@ -109,6 +125,13 @@
                         <input type="number" name="pincode" placeholder="Pincode" maxlength="6" minlength="6"
                             onfocus="this.placeholder = ''" onblur="this.placeholder = 'Pincode'" value="<%= currentUser.pincode %>" required
                             class="single-input">
+                    </div>
+                    <div class="mt-10">
+                        <input type="submit" name="submit" onfocus="this.placeholder = ''"
+                            onblur="this.placeholder = 'submit'" class="btn_2">
+
+                        <input type="reset" name="reset" onfocus="this.placeholder = ''"
+                            onblur="this.placeholder = 'reset'" class="btn_2">
                     </div>
                 </form>
             </div>

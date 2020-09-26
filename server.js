@@ -268,12 +268,14 @@ app.post("/callback", (req, res) => {
 // Update Details
 // ================
 app.post('/:id/updateDetails', function(req, res){
-    var userId = req.id;
-    User.findOne({userId: userId}, function(err, foundUser){
+    var userId = req.params.id;
+    console.log(userId);
+    User.find({userId: userId}, function(err, foundUser){
         if(err) {
             throw err;
         } else {
-            if(foundUser) {
+            console.log(foundUser);
+            if(foundUser.length>0) {
                 User.updateOne({userId: userId}, {
                     email:req.body.email,
                     firstName:req.body.firstName,
@@ -285,11 +287,13 @@ app.post('/:id/updateDetails', function(req, res){
                     contact:req.body.contact
                 }, function(err, done){
                     if(err) {
-                        throw err;
+                        console.log(err);
                     } else {
-                        console.log(done);
+                        res.redirect('/profile');
                     }
                 })
+            } else {
+                console.log("kuch gadbad hai!");
             }
         }
     });
