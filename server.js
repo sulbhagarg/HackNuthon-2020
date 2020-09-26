@@ -69,7 +69,7 @@ passport.use(new googleStrategy({
         proxy: true
     },
     function(request, accessToken, refreshToken, profile, done) {
-        User.findOne({googleId:profile.id}).then((foundUser)=>{
+        User.findOne({userId:profile.id}).then((foundUser)=>{
             if(foundUser) {
                 done(null,foundUser)
             } else {
