@@ -14,4 +14,4 @@ const RequestSchema = mongoose.Schema({
 });
 
 // export model user with RequestSchema
-module.exports = mongoose.model("user", RequestSchema);
+module.exports = mongoose.model("request", RequestSchema);

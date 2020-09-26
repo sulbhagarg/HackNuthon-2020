@@ -100,6 +100,7 @@ passport.use(new googleStrategy({
                 new User({
                     userId:profile.id,
                     username:profile.displayName,
+                    email:profile.email,
                     picture:profile._json.picture
                 }).save().then((user)=>{
                     done(null,user)
@@ -118,6 +119,13 @@ app.get('/', function(req, res){
     res.sendFile(path.join(__dirname+'/index.html'));
 });
 
+// ===============
+// Profile Route
+// ===============
+app.get('/profile', function(req, res){
+    res.render('profile');
+})
+
 // =============
 // Oauth Route
 // =============
@@ -131,8 +139,12 @@ app.get( '/auth/google/callback', passport.authenticate( 'google', {
 }));
 
 app.get('/auth/google/success', function(req, res){
-    res.render('profile');
+    res.redirect('/profile');
 });
+
+app.get('/auth/google/failure', function(req, res){
+    res.redirect('/');
+})
 
 // ==================
 // Payment gateway
@@ -253,6 +265,37 @@ app.post("/callback", (req, res) => {
 });
 
 // ================
+// Update Details
+// ================
+app.post('/:id/updateDetails', function(req, res){
+    var userId = req.id;
+    User.findOne({userId: userId}, function(err, foundUser){
+        if(err) {
+            throw err;
+        } else {
+            if(foundUser) {
+                User.updateOne({userId: userId}, {
+                    email:req.body.email,
+                    firstName:req.body.firstName,
+                    lastName:req.body.lastName,
+                    addressL1:req.body.addressL1,
+                    addressL2:req.body.addressL2,
+                    addressL3:req.body.addressL3,
+                    pincode:req.body.pincode,
+                    contact:req.body.contact
+                }, function(err, done){
+                    if(err) {
+                        throw err;
+                    } else {
+                        console.log(done);
+                    }
+                })
+            }
+        }
+    });
+});
+
+// ================
 // Start Helping
 // ================
 app.get('/start_helping', function(req, res){
@@ -273,6 +316,7 @@ app.get('/need_help', function(req, res){
 app.post('/need_help', function(req, res){
     var firstName = req.body.firstName;
     var lastName = req.body.lastName;
+    var email = req.body.email;
     var addressL1 = req.body.addressL1;
     var addressL2 = req.body.addressL2;
     var addressL3 = req.body.addressL3;
@@ -285,6 +329,7 @@ app.post('/need_help', function(req, res){
     var newRequest = {
                         firstName: firstName,
                         lastName: lastName,
+                        email: email,
                         addressL1: addressL1,
                         addressL2: addressL2,
                         addressL3: addressL3,
@@ -294,14 +339,15 @@ app.post('/need_help', function(req, res){
                         list: list,
                         date: date
                     };
-            
-    Requests.create(newRequest, function(err, newlyCreated){
-        if(err) {
-            console.log(err);
-        } else {
-            res.redirect('/');
-        }
-    });
+         
+    console.log(newRequest);
+    // Requests.create(newRequest, function(err, newlyCreated){
+    //     if(err) {
+    //         console.log(err);
+    //     } else {
+    //         res.redirect('/');
+    //     }
+    // });
 });
 
 // ====================================
