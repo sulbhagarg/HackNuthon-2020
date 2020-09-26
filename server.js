@@ -1,8 +1,5 @@
 // ===============================
 // Classic Node Packages & APIS
-
-const keys = require('./config/keys');
-
 // ===============================
 global.express = require('express');
 global.app = express();
