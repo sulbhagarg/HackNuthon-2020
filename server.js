@@ -69,6 +69,7 @@ passport.use(new googleStrategy({
         proxy: true
     },
     function(request, accessToken, refreshToken, profile, done) {
+        console.log(profile);
         User.findOne({userId:profile.id}).then((foundUser)=>{
             if(foundUser) {
                 done(null,foundUser)
@@ -100,7 +101,7 @@ app.get('/auth/google', passport.authenticate('google', {
 }));
 
 app.get( '/auth/google/callback', passport.authenticate( 'google'), function(req, res){
-    res.send("Successfully signed up in!")
+    res.send("Successfully signed up in!");
 });
 
 // ==================
@@ -110,8 +111,7 @@ app.get("/paynow", (req, res)=> {
     res.render('payment');
 });
 
-app.post("/paynow", (req, res) => {
-  
+app.post("/paynow", (req, res) => {  
     var paymentDetails = {
         amount: req.body.amount,
         customerId: req.body.name,
