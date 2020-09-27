@@ -1,4 +1,4 @@
-# COTrack
+# QurantinBud
 
 A Web-portal as your quarantine bud.
 
