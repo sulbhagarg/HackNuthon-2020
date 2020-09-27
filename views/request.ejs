@@ -72,7 +72,7 @@
                 <div class="col-lg-12">
                     <div class="breadcrumb_iner">
                         <div class="breadcrumb_iner_item text-center">
-                            <h2>User Details</h2>
+                            <h2>Request details</h2>
                         </div>
                     </div>
                 </div>
@@ -86,8 +86,8 @@
             <div class="section-top-border">
                 <div class="row">
                     <div class="col-lg-8 col-md-8">
-                        <h3 class="mb-30">Keep your details updated!!</h3>
-                        <form action="/<%= currentUser.userId %>/updateDetails" method="POST">
+                        <h3 class="mb-30">Fill the necessary details :)</h3>
+                        <form action="/need_help" method="POST">
                             <div class="mt-10">
                                 <input type="text" name="firstName" placeholder="First Name" value="<%= currentUser.firstName %>"
                                     onfocus="this.placeholder = ''" onblur="this.placeholder = 'First Name'" required
@@ -126,6 +126,24 @@
                                     class="single-input">
                             </div>
                             <div class="mt-10">
+                                <p>Select a Category</p>
+                                <div class="form-select" id="default-select_2">
+                                    <select class="single-input" name="category">
+                                        <option value=" 1">Category</option>
+                                        <option value="medicines">Medicines</option>
+                                        <option value="grocery">Grocery</option>
+                                        <option value="packedFood">Packed Food</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mt-10">
+                                <p>Add the needed itmes from the category</p>
+                                <textarea name="list" placeholder="abc 2 Pieces, pqr 300gm, xyz(Q 3)"
+                                    onfocus="this.placeholder = ''" onblur="this.placeholder = 'abc 2 Pieces, pqr 300gm, xyz(Q 3)'" required
+                                    class="single-input"></textarea>
+                            </div>
+                            <div class="mt-10">
                                 <input type="submit" name="submit" onfocus="this.placeholder = ''"
                                     onblur="this.placeholder = 'submit'" class="btn_2">
 
@@ -141,34 +159,34 @@
                     
  <!-- jquery plugins here-->
 
- <script src="js/jquery-1.12.1.min.js"></script>
+ <script src="/scripts/jquery-1.12.1.min.js"></script>
  <!-- popper js -->
- <script src="js/popper.min.js"></script>
+ <script src="/scripts/popper.min.js"></script>
  <!-- bootstrap js -->
- <script src="js/bootstrap.min.js"></script>
+ <script src="/scripts/bootstrap.min.js"></script>
  <!-- easing js -->
- <script src="js/jquery.magnific-popup.js"></script>
+ <script src="/scripts/jquery.magnific-popup.js"></script>
  <!-- swiper js -->
- <script src="js/swiper.min.js"></script>
- <script src="js/wow.min.js"></script>
- <script src="js/jquery.smooth-scroll.min.js"></script>
+ <script src="/scripts/swiper.min.js"></script>
+ <script src="/scripts/wow.min.js"></script>
+ <script src="/scripts/jquery.smooth-scroll.min.js"></script>
  <!-- swiper js -->
- <script src="js/masonry.pkgd.js"></script>
+ <script src="/scripts/masonry.pkgd.js"></script>
  <!-- particles js -->
- <script src="js/owl.carousel.min.js"></script>
- <script src="js/jquery.nice-select.min.js"></script>
+ <script src="/scripts/owl.carousel.min.js"></script>
+ <script src="/scripts/jquery.nice-select.min.js"></script>
  <!-- swiper js -->
- <script src="js/slick.min.js"></script>
- <script src="js/jquery.counterup.min.js"></script>
- <script src="js/waypoints.min.js"></script>
+ <script src="/scripts/slick.min.js"></script>
+ <script src="/scripts/jquery.counterup.min.js"></script>
+ <script src="/scripts/waypoints.min.js"></script>
  <!-- contact js -->
- <script src="js/jquery.ajaxchimp.min.js"></script>
- <script src="js/jquery.form.js"></script>
- <script src="js/jquery.validate.min.js"></script>
- <script src="js/mail-script.js"></script>
- <script src="js/contact.js"></script>
+ <script src="/scripts/jquery.ajaxchimp.min.js"></script>
+ <script src="/scripts/jquery.form.js"></script>
+ <script src="/scripts/jquery.validate.min.js"></script>
+ <script src="/scripts/mail-script.js"></script>
+ <script src="/scripts/contact.js"></script>
  <!-- custom js -->
- <script src="js/custom.js"></script>
+ <script src="/scripts/custom.js"></script>
 </body>
 
 </html>

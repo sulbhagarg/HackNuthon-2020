@@ -123,7 +123,12 @@ app.get('/', function(req, res){
 // Profile Route
 // ===============
 app.get('/profile', function(req, res){
-    res.render('profile');
+    if(req.isAuthenticated()) {
+        res.render('profile');
+    } else {
+        res.redirect('/auth/google');
+    }
+    // res.render('profile');
 })
 
 // =============
@@ -268,90 +273,117 @@ app.post("/callback", (req, res) => {
 // Update Details
 // ================
 app.post('/:id/updateDetails', function(req, res){
-    var userId = req.params.id;
-    console.log(userId);
-    User.find({userId: userId}, function(err, foundUser){
-        if(err) {
-            throw err;
-        } else {
-            console.log(foundUser);
-            if(foundUser.length>0) {
-                User.updateOne({userId: userId}, {
-                    email:req.body.email,
-                    firstName:req.body.firstName,
-                    lastName:req.body.lastName,
-                    addressL1:req.body.addressL1,
-                    addressL2:req.body.addressL2,
-                    addressL3:req.body.addressL3,
-                    pincode:req.body.pincode,
-                    contact:req.body.contact
-                }, function(err, done){
-                    if(err) {
-                        console.log(err);
-                    } else {
-                        res.redirect('/profile');
-                    }
-                })
+    if(!req.isAuthenticated()) {
+        res.redirect('/auth/google');
+    } else {
+        var userId = req.params.id;
+        console.log(userId);
+        User.find({userId: userId}, function(err, foundUser){
+            if(err) {
+                throw err;
             } else {
-                console.log("kuch gadbad hai!");
+                console.log(foundUser);
+                if(foundUser.length>0) {
+                    User.updateOne({userId: userId}, {
+                        email:req.body.email,
+                        firstName:req.body.firstName,
+                        lastName:req.body.lastName,
+                        addressL1:req.body.addressL1,
+                        addressL2:req.body.addressL2,
+                        addressL3:req.body.addressL3,
+                        pincode:req.body.pincode,
+                        contact:req.body.contact
+                    }, function(err, done){
+                        if(err) {
+                            console.log(err);
+                        } else {
+                            res.redirect('/profile');
+                        }
+                    })
+                } else {
+                    console.log("kuch gadbad hai!");
+                }
             }
-        }
-    });
+        });
+    }
 });
 
 // ================
 // Start Helping
 // ================
 app.get('/start_helping', function(req, res){
+    if(!req.isAuthenticated()) {
+        res.redirect('/auth/google');
+    } else {
 
+    }
 });
 
 app.post('/start_helping', function(req, res){
+    if(!req.isAuthenticated()) {
+        res.redirect('/auth/google');
+    } else {
 
+    }
 });
 
 // ==============
 // Post Request
 // ==============
 app.get('/need_help', function(req, res){
-
+    if(!req.isAuthenticated()) {
+        res.redirect('/auth/google');
+    } else {
+        res.render('request');
+    }
 });
 
 app.post('/need_help', function(req, res){
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var email = req.body.email;
-    var addressL1 = req.body.addressL1;
-    var addressL2 = req.body.addressL2;
-    var addressL3 = req.body.addressL3;
-    var pincode = req.body.pincode;
-    var contact = req.body.contact;
-    var category = req.body.category;
-    var list = req.body.list;
-    var date = Date.now();
+    if(!req.isAuthenticated()) {
+        res.redirect('/auth/google');
+    } else {
+        var firstName = req.body.firstName;
+        var lastName = req.body.lastName;
+        var email = req.body.email;
+        var addressL1 = req.body.addressL1;
+        var addressL2 = req.body.addressL2;
+        var addressL3 = req.body.addressL3;
+        var pincode = req.body.pincode;
+        var contact = req.body.contact;
+        var category = req.body.category;
+        var list = req.body.list;
+        var date = Date.now();
+    
+        var newRequest = {
+                            firstName: firstName,
+                            lastName: lastName,
+                            email: email,
+                            addressL1: addressL1,
+                            addressL2: addressL2,
+                            addressL3: addressL3,
+                            pincode: pincode,
+                            contact: contact,
+                            category: category,
+                            list: list,
+                            date: date
+                        };
 
-    var newRequest = {
-                        firstName: firstName,
-                        lastName: lastName,
-                        email: email,
-                        addressL1: addressL1,
-                        addressL2: addressL2,
-                        addressL3: addressL3,
-                        pincode: pincode,
-                        contact: contact,
-                        category: category,
-                        list: list,
-                        date: date
-                    };
-         
-    console.log(newRequest);
-    // Requests.create(newRequest, function(err, newlyCreated){
-    //     if(err) {
-    //         console.log(err);
-    //     } else {
-    //         res.redirect('/');
-    //     }
-    // });
+        Requests.create(newRequest, function(err, newlyCreated){
+            if(err) {
+                console.log(err);
+            } else {
+                res.redirect('/');
+            }
+        });
+    }
+});
+
+// ================
+// Logout Route
+// ================
+app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect("/");
 });
 
 // ====================================
