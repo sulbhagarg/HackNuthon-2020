@@ -18,4 +18,6 @@ A Web-portal as your quarantine bud.
 3. Install Dependencies
    - `$> npm install`
 4. Start server
-   - `$> npm serevr.js`
+   - `$> node serever.js`
+
+Go to http://localhost:5000/
