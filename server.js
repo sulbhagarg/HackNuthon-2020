@@ -307,7 +307,7 @@ app.get('/start_help', function(req, res){
     if(!req.isAuthenticated()) {
         res.redirect('/auth/google');
     } else {
-        Requests.find({}, function(err, foundRequests){
+        Requests.find({accepted: false}, function(err, foundRequests){
             if(err) {
                 console.log(err);
             } else {
@@ -321,16 +321,85 @@ app.post('/:from/:to/start_help', function(req, res){
     if(!req.isAuthenticated()) {
         res.redirect('/auth/google');
     } else {
-        var requestId = req.params.to;
+        var requestId = mongoose.Types.ObjectId(req.params.to);
         Requests.findOneAndUpdate({_id: requestId}, {accepted: true}, function(err, foundRequest){
             if(err){
                 console.log(err);
             } else {
-                res.redirect('/paynow');
+                var email = foundRequest.email;
+                var mailOptions = {
+                    from: 'qurantinbud@gmail.com',
+                    to: email,
+                    subject: 'Congratulations',
+                    text: 'Hey, your request is accepted!! The person will contact you soon.'
+                };
+                transporter.sendMail(mailOptions, function(error, info){
+                    if(error){
+                        console.log(error);
+                    }
+                    else{        
+                        console.log('Email sent: ' + info.response);
+                        res.redirect('/paynow');
+                    }
+                });
             }
         }) 
     }
 });
+
+app.post('/:from/:to/report', function(req, res){
+    if(!req.isAuthenticated()) {
+        res.redirect('/auth/google');
+    } else {
+        var fromId = req.params.from;
+        var toId = mongoose.Types.ObjectId(req.params.to);
+        Requests.findOne({_id: toId}, function(err, foundRequest){
+            var email = foundRequest.email;
+            var mailOptions = {
+                from: 'qurantinbud@gmail.com',
+                to: email,
+                subject: 'Blocked',
+                text: 'Hey, As we find your need_help request suspicious, it had been taken down!'
+            };
+            transporter.sendMail(mailOptions, function(error, info){
+                if(error){
+                    console.log(error);
+                }
+                else{        
+                    console.log('Email sent: ' + info.response);
+                    Requests.findByIdAndRemove(toId, function(err){
+                        if(err){
+                            console.log(err);
+                        } else {
+                            User.findOne({userId: fromId}, function(err, foundUser){
+                                if(err) {
+                                    console.log(err);
+                                } else {
+                                    var fromEmail = foundUser.email;
+                                    var mailOptions = {
+                                        from: 'qurantinbud@gmail.com',
+                                        to: fromEmail,
+                                        subject: 'Report noted',
+                                        text: 'Hey, thank you for helping us. Your Report is successfully noted'
+                                    };
+                                    transporter.sendMail(mailOptions, function(error, info){
+                                        if(error){
+                                            console.log(error);
+                                        }
+                                        else{        
+                                            console.log('Email sent: ' + info.response);
+                                            res.redirect('/');
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    })
+                }
+            });
+        });
+    }
+})
 
 // ==============
 // Post Request

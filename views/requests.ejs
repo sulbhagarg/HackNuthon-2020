@@ -162,10 +162,14 @@
                                             </ul>
                                             <hr>
                                             <div class="text-right">
-                                                <form action="/<%=currentUser.userId %>/<%= request.id %>/start_help" method="POST">
-                                                    <button class="btn btn-success">Accept</button>
+                                                <form class="float-right" action="/<%=currentUser.userId %>/<%= request.id %>/start_help" method="POST">
+                                                    &nbsp;&nbsp;<button class="btn btn-success">Accept</button>
+                                                </form>
+                                                <form class="float-right" action="/<%=currentUser.userId %>/<%= request.id %>/report" method="POST">
                                                     <button class="btn btn-danger">Report</button>
                                                 </form>
+                                                <br>
+                                                <br>
                                             </div>
                                         </div>
                                     </article>
