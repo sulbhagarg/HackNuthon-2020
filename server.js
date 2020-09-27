@@ -175,7 +175,7 @@ app.get("/paynow", (req, res)=> {
 app.post("/paynow", (req, res) => {
     var email = req.body.email;
     var mailOptions = {
-        from: '',
+        from: 'qurantinbud@gmail.com',
         to: email,
         subject: 'You are a Hero',
         text: 'Hey ' + req.body.name +' We have successfully recieved your payment.'
