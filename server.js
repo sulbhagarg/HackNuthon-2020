@@ -448,7 +448,7 @@ app.post('/need_help', function(req, res){
             if(err) {
                 console.log(err);
             } else {
-                res.redirect('/start_help');
+                res.redirect('/paynow');
             }
         });
     }
