@@ -15,12 +15,26 @@ global.paytm = require('paytm-pg-node-sdk');
 global.checksum_lib = require('./Paytm/checksum');
 global.config = require('./Paytm/config');
 global.flash = require("connect-flash");
+global.nodemailer = require('nodemailer');
+global.report = require('./models/report');
 
 // ===================
 // Exporting Models
 // ===================
 global.User = require('./models/user');
 global.Requests = require('./models/request');
+
+// ==========
+// NodeMailer
+// ==========
+global.nodemailer = require('nodemailer');
+global.transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'qurantinbud@gmail.com',
+        pass: 'nirma123'
+    }
+});
 
 // =======================
 // Environment Variables
@@ -158,44 +172,24 @@ app.get("/paynow", (req, res)=> {
     res.render('payment');
 });
 
-app.post("/paynow", (req, res) => {  
-    var paymentDetails = {
-        amount: req.body.amount,
-        customerId: req.body.name,
-        customerEmail: req.body.email,
-        customerPhone: req.body.phone
-    }
-    if(!paymentDetails.amount || !paymentDetails.customerId || !paymentDetails.customerEmail || !paymentDetails.customerPhone) {
-        res.status(400).send('Payment failed')
-    } else {
-        var params = {};
-        params['MID'] = config.PaytmConfig.mid;
-        params['WEBSITE'] = config.PaytmConfig.website;
-        params['CHANNEL_ID'] = 'WEB';
-        params['INDUSTRY_TYPE_ID'] = 'Retail';
-        params['ORDER_ID'] = 'TEST_'  + new Date().getTime();
-        params['CUST_ID'] = paymentDetails.customerId;
-        params['TXN_AMOUNT'] = paymentDetails.amount;
-        params['CALLBACK_URL'] = 'http://localhost:5000/callback';
-        params['EMAIL'] = paymentDetails.customerEmail;
-        params['MOBILE_NO'] = paymentDetails.customerPhone;
-    
-    
-        checksum_lib.genchecksum(params, config.PaytmConfig.key, function (err, checksum) {
-            var txn_url = "https://securegw-stage.paytm.in/theia/processTransaction"; // for staging
-            // var txn_url = "https://securegw.paytm.in/theia/processTransaction"; // for production
-    
-            var form_fields = "";
-            for (var x in params) {
-                form_fields += "<input type='hidden' name='" + x + "' value='" + params[x] + "' >";
-            }
-            form_fields += "<input type='hidden' name='CHECKSUMHASH' value='" + checksum + "' >";
-    
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.write('<html><head><title>Merchant Checkout Page</title></head><body><center><h1>Please do not refresh this page...</h1></center><form method="post" action="' + txn_url + '" name="f1">' + form_fields + '</form><script type="text/javascript">document.f1.submit();</script></body></html>');
-            res.end();
-        });
-    }
+app.post("/paynow", (req, res) => {
+    var email = req.body.email;
+    var mailOptions = {
+        from: '',
+        to: email,
+        subject: 'You are a Hero',
+        text: 'Hey ' + req.body.name +' We have successfully recieved your payment.'
+    };
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+        }
+        else{        
+            console.log('Email sent: ' + info.response);
+            console.log(req.params);
+            res.redirect("/");
+        }
+    });
 });
 
 app.post("/callback", (req, res) => {
@@ -277,12 +271,10 @@ app.post('/:id/updateDetails', function(req, res){
         res.redirect('/auth/google');
     } else {
         var userId = req.params.id;
-        console.log(userId);
         User.find({userId: userId}, function(err, foundUser){
             if(err) {
                 throw err;
             } else {
-                console.log(foundUser);
                 if(foundUser.length>0) {
                     User.updateOne({userId: userId}, {
                         email:req.body.email,
@@ -299,7 +291,7 @@ app.post('/:id/updateDetails', function(req, res){
                         } else {
                             res.redirect('/profile');
                         }
-                    })
+                    });
                 } else {
                     console.log("kuch gadbad hai!");
                 }
@@ -311,19 +303,32 @@ app.post('/:id/updateDetails', function(req, res){
 // ================
 // Start Helping
 // ================
-app.get('/start_helping', function(req, res){
+app.get('/start_help', function(req, res){
     if(!req.isAuthenticated()) {
         res.redirect('/auth/google');
     } else {
-
+        Requests.find({}, function(err, foundRequests){
+            if(err) {
+                console.log(err);
+            } else {
+                res.render('requests', {requests: foundRequests});
+            }
+        })
     }
 });
 
-app.post('/start_helping', function(req, res){
+app.post('/:from/:to/start_help', function(req, res){
     if(!req.isAuthenticated()) {
         res.redirect('/auth/google');
     } else {
-
+        var requestId = req.params.to;
+        Requests.findOneAndUpdate({_id: requestId}, {accepted: true}, function(err, foundRequest){
+            if(err){
+                console.log(err);
+            } else {
+                res.redirect('/paynow');
+            }
+        }) 
     }
 });
 
@@ -353,6 +358,7 @@ app.post('/need_help', function(req, res){
         var category = req.body.category;
         var list = req.body.list;
         var date = Date.now();
+        var accepted = false;
     
         var newRequest = {
                             firstName: firstName,
@@ -365,14 +371,15 @@ app.post('/need_help', function(req, res){
                             contact: contact,
                             category: category,
                             list: list,
-                            date: date
+                            date: date,
+                            accepted: accepted
                         };
 
         Requests.create(newRequest, function(err, newlyCreated){
             if(err) {
                 console.log(err);
             } else {
-                res.redirect('/');
+                res.redirect('/start_help');
             }
         });
     }

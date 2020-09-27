@@ -10,6 +10,7 @@
       <div class="col-md-4 offset-md-4">
         <div class="card">
           <div class="card-body">
+            <h3>For Security Purpose you have to make a deposit of INR 500</h3>
             <form class="" action="/paynow" method="post">
               <div class="form-group">
                 <label for="">Name: </label>
@@ -17,7 +18,7 @@
               </div>
               <div class="form-group">
                 <label for="">Email: </label>
-                <input class="form-control" type="text" name="email" value="">
+                <input class="form-control" type="text" name="email" value="<%= currentUser.email %>">
               </div>
               <div class="form-group">
                 <label for="">Phone: </label>
@@ -25,10 +26,10 @@
               </div>
                 <div class="form-group">
                 <label for="">Amount: </label>
-                <input class="form-control" type="text" name="amount" value="">
+                <input class="form-control" type="text" name="amount" value="500" disabled>
               </div>
               <div class="form-group">
-                <button class="btn form-control btn-primary">Pay Now</button>
+                <button class="btn form-control btn-success">Pay Now</button>
               </div>
             </form>
           </div>
