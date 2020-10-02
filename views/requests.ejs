@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="/stylesheets/slick.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/stylesheets/style.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/stylesheets/index.css">
 </head>
 
 <body>
@@ -64,9 +66,7 @@
                 <div class="row align-items-center">
                     <div class="col-lg-12">
                         <nav class="navbar navbar-expand-lg navbar-light">
-                            <a class="navbar-brand" href="/"> <img src="/img/logo.png" alt="logo"><img
-                                    src="https://fontmeme.com/permalink/200926/a120a9c2a9c9cad484fe1f918483cf80.png"
-                                    alt="QuarantinBud" border="0"></a>
+                            <a class="navbar-brand" href="/"> <img src="/img/logo.png" id="logo" alt="logo"></a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse"
                                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                                 aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@
 
                             <div class="collapse navbar-collapse main-menu-item justify-content-end"
                                 id="navbarSupportedContent">
-                                <ul class="navbar-nav align-items-center">
+                                <ul class="navbar-nav align-items-center" id="menu-links">
                                     <li class="nav-item">
                                         <a class="nav-link" href="/">Home</a>
                                     </li>
@@ -129,7 +129,7 @@
                                 <input type="text" class="form-control" placeholder='Search Keyword'
                                     onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Keyword'">
                                 &nbsp;
-                                <button class="btn btn-success col-sm-4" type="submit">Search</button>
+                                <button class="btn btn-secondary col-sm-4" type="submit">Search</button>
                             </div>
                         </div>
                     </form>
@@ -144,7 +144,7 @@
                             <div class="card-columns">
                                 <% requests.forEach(function(request){ %>
                                     <article class="card">
-                                        <img class="card-img-top rounded-0" src="/img/blog/<%= request.category %>.png" alt="">
+                                        <img class="card-img-top rounded-0" src="/img/blog/<%= request.category %>.png" id="cardimg" alt="">
                                         <div class="card-body">
                                             <h5 class="card-title"><%= request.firstName %> <%= request.lastName %></h5>
                                             Items to be picked:
@@ -163,10 +163,10 @@
                                             <hr>
                                             <div class="text-right">
                                                 <form class="float-right" action="/<%=currentUser.userId %>/<%= request.id %>/start_help" method="POST">
-                                                    &nbsp;&nbsp;<button class="btn btn-success">Accept</button>
+                                                    &nbsp;&nbsp;<button class="btn btn-secondary">Accept</button>
                                                 </form>
                                                 <form class="float-right" action="/<%=currentUser.userId %>/<%= request.id %>/report" method="POST">
-                                                    <button class="btn btn-danger">Report</button>
+                                                    <button class="btn btn-secondary">Report</button>
                                                 </form>
                                                 <br>
                                                 <br>
