@@ -21,3 +21,31 @@ body{
     background-color: lightgray;
     margin: 4%;
 }
+
+#menu-links li a{
+    font-size: 20px;
+}
+
+#menu-links li a:hover{
+    color: #e9ac67;
+}
+
+#logo{
+    width:80px;
+    height:80px;
+}
+
+#home-buttons{
+    background-color: #e9ac67;
+    border-color: #e9ac67;
+    font-size: large;
+}
+#home-buttons:hover{
+    background-color: blanchedalmond;
+    color: #e9ac67;
+    border-color: #e9ac67;
+}
+
+#cardimg{
+    height: 220px;
+}
